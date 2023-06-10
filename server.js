@@ -43,6 +43,7 @@ app.post('/api/notes', (req, res) => {
     const newNote = {
       title,
       text,
+      id: uuid(),
     };
 
     const response = {
@@ -56,6 +57,20 @@ app.post('/api/notes', (req, res) => {
     res.json(`Note added successfully 🚀`);
   } else {
     res.error('Error in adding note');
+  }
+});
+
+// get route for deleting a specific note
+app.delete('/api/notes/:id', (req, res) => {
+  if(req.body && req.params.id) {
+    const noteId = req.params.id;
+    const notes = JSON.parse(fs.readFileSync('./db/notes.json', 'utf8'));
+    const newNotes = notes.filter(note => note.id !== noteId);
+    fs.writeFileSync('./db/notes.json', JSON.stringify(newNotes));
+    res.json('success');
+    console.info(`Note deleted successfully 🚀`);
+  } else {
+    res.error('Error in deleting note');
   }
 });
 
