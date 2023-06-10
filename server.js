@@ -27,38 +27,37 @@ app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
-// GET Route for retrieving all the tips
+// GET Route for retrieving all the notes
 app.get('/api/notes', (req, res) => {
-  console.info(`${req.method} request received for tips`);
+  console.info(`${req.method} request received for notes`);
   readFromFile('./db/notes.json').then((data) => res.json(JSON.parse(data)));
 });
 
-// POST Route for a new UX/UI tip
+// POST Route for a note
 app.post('/api/notes', (req, res) => {
-  console.info(`${req.method} request received to add a tip`);
-
-  const { noteTitle, noteText } = req.body;
+  console.info(`${req.method} request received to add a note`);
+  console.log(req.body);
+  const { title, text } = req.body;
 
   if (req.body) {
     const newNote = {
-      noteTitle,
-      noteText,
+      title,
+      text,
     };
 
+    const response = {
+      status: 'success',
+      body: newNote,
+    };
+
+    console.log(response);
+
     readAndAppend(newNote, './db/notes.json');
-    res.json(`Tip added successfully 🚀`);
+    res.json(`Note added successfully 🚀`);
   } else {
-    res.error('Error in adding tip');
+    res.error('Error in adding note');
   }
 });
-
-// GET Route for retrieving all the feedback
-app.get('/api/notes', (req, res) => {
-  console.info(`${req.method} request received for notes`);
-
-  readFromFile('./db/notes.json').then((data) => res.json(JSON.parse(data)));
-});
-
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT} 🚀`)
